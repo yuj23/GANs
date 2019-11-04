@@ -1,0 +1,55 @@
+
+"""
+save all parameters.
+"""
+import torch 
+from torchvision import transforms
+from PIL import Image
+
+class Params:
+
+    def __init__(self):
+        self.save_path = "/Users/yujue/yujue_projects/gan/cycleGan/save" 
+        self.isTrain = True
+        self.device = torch.device('cuda:0') if torch.cuda.is_available() else torch.device('cpu')
+        self.transform =[transforms.Resize(int(256*1.12), Image.BICUBIC), 
+                transforms.RandomCrop(256), 
+                transforms.RandomHorizontalFlip(),
+                transforms.ToTensor(),
+                transforms.Normalize((0.5,0.5,0.5), (0.5,0.5,0.5)) ]
+        self.dataset_path = '/Users/yujue/yujue_projects/gan/cycleGan/data'
+        self.data_name='horse2zebra'
+        self.serial = True
+
+        self.hy_params()
+        self.print_params()
+        self.model_params()
+        self.data_params()
+
+    def hy_params(self):
+        self.n_epoch = 10  #number of epoch
+        self.epoch = 1  # start epoch
+        self.epoch_start_decay = 2 # start to decay lerning rate
+        self.lr = 0.0002
+        self.beta1 = 0.5
+        self.lambda_idt_A = 10
+        self.lambda_idt_B = 10
+        self.lambda_cycle_A = 5
+        self.lambda_cycle_B = 5
+
+    def print_params(self):
+        self.print_freq = 1
+        self.save_lasted_freq = 1
+        self.save_epoch_freq = 1
+
+    def model_params(self):
+        self.pool_size = 4
+        self.input_nc = 3
+        self.output_nc = 3
+        
+    def data_params(self):
+        self.shuffle = True
+        self.batch_size = 8
+
+
+
