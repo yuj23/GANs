@@ -9,7 +9,7 @@ from PIL import Image
 class Params:
 
     def __init__(self):
-        self.save_path = "/Users/yujue/yujue_projects/gan/cycleGan/save" 
+        self.save_path = "save" 
         self.isTrain = True
         self.device = torch.device('cuda:0') if torch.cuda.is_available() else torch.device('cpu')
         self.transform =[transforms.Resize(int(256*1.12), Image.BICUBIC), 
@@ -17,7 +17,7 @@ class Params:
                 transforms.RandomHorizontalFlip(),
                 transforms.ToTensor(),
                 transforms.Normalize((0.5,0.5,0.5), (0.5,0.5,0.5)) ]
-        self.dataset_path = '/Users/yujue/yujue_projects/gan/cycleGan/data'
+        self.dataset_path = 'data'
         self.data_name='horse2zebra'
         self.serial = True
 
