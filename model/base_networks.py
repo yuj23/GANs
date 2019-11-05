@@ -1,6 +1,7 @@
 """
 All base network model included such like generator_A2B, Discriminator_A.
 """
+import torch
 import torch.nn as nn
 import torch.nn.functional as F
 

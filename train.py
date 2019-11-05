@@ -20,12 +20,12 @@ if __name__ == "__main__":
     for epoch in range(model.epoch,params.n_epoch+1):
         start = time.time()
         epoch_iters = 0
+        print('Epoch : {}'.format(epoch))
 
         for i,data in enumerate(dataset):
             total_iters += params.batch_size
             epoch_iters += params.batch_size
             model.set_input(data) #input data 
-            print('Epoch : {}'.format(epoch))
             model.step() #train the model
 
             if total_iters % params.print_freq == 0:

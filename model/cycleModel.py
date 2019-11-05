@@ -25,10 +25,10 @@ class cycleGAN(BaseModel):
         self.fake_pool_A = set_buffer_pool(self.params.pool_size)
         self.fake_pool_B = set_buffer_pool(self.params.pool_size)
         # define the nets
-        self.netG_A2B = G(self.params.input_nc,self.params.output_nc)
-        self.netG_B2A = G(self.params.input_nc,self.params.output_nc)
-        self.netD_A = D(self.params.input_nc)
-        self.netD_B = D(self.params.input_nc)
+        self.netG_A2B = G(self.params.input_nc,self.params.output_nc).to(self.device)
+        self.netG_B2A = G(self.params.input_nc,self.params.output_nc).to(self.device)
+        self.netD_A = D(self.params.input_nc).to(self.device)
+        self.netD_B = D(self.params.input_nc).to(self.device)
         # define optimizer
         self.optimizer_G = torch.optim.Adam(itertools.chain(self.netG_A2B.parameters(),\
              self.netG_B2A.parameters()),lr=params.lr,betas=(params.beta1,0.999))
@@ -88,10 +88,10 @@ class cycleGAN(BaseModel):
         calculate Discriminator loss and backward to get gradient.
         """
         self.loss_D_A_real = self.criterion_GAN(self.netD_A(self.real_A),self.target_real)*0.5
-        fake_A = self.fake_A_pool.choose(self.fake_A)
+        fake_A = self.fake_pool_A.choose(self.fake_A)
         self.loss_D_A_fake = self.criterion_GAN(self.netD_A(fake_A.detach()),self.target_fake)*0.5
         self.loss_D_B_real = self.criterion_GAN(self.netD_B(self.real_B),self.target_real)*0.5 
-        fake_B = self.fake_B_pool.choose(self.fake_A)
+        fake_B = self.fake_pool_B.choose(self.fake_A)
         self.loss_D_B_fake = self.criterion_GAN(self.netD_B(fake_B.detach()),self.target_fake)*0.5
         self.loss_D = self.loss_D_A_real + self.loss_D_A_fake + self.loss_D_B_real + self.loss_D_B_fake
         self.losses['loss_D'].append(self.loss_D.item())

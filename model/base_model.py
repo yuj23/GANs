@@ -80,6 +80,8 @@ class BaseModel:
         dicts['losses'] = self.losses
         dicts['optimizer_G'] = self.optimizer_G
         dicts['optimizer_D'] = self.optimizer_D
+        if not os.path.exists('self.params.save_path'):
+            os.mkdir('self.params.save_path')
         save_path = self.params.save_path+'/'+str(epoch)+'_checkpoint.pth.tar'
         for name in self.model_names:
             if isinstance(name,str):

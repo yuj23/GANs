@@ -38,18 +38,18 @@ class Params:
         self.lambda_cycle_B = 5
 
     def print_params(self):
-        self.print_freq = 1
-        self.save_lasted_freq = 1
+        self.print_freq = 10
+        self.save_lasted_freq = 10
         self.save_epoch_freq = 1
 
     def model_params(self):
-        self.pool_size = 4
+        self.pool_size = 2
         self.input_nc = 3
         self.output_nc = 3
         
     def data_params(self):
         self.shuffle = True
-        self.batch_size = 8
+        self.batch_size = 2
 
 
 
