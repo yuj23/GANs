@@ -1,12 +1,13 @@
 """
-The cycle gan model is the subclass of BaseModel.
+The cycle gan model is subclass of BaseModel.
 """
 from model.base_model import BaseModel
 import torch
 import itertools
 from model.base_networks import G
 from model.base_networks import D
-from model.base_networks import set_buffer_pool
+from utils import set_buffer_pool
+from utils import get_scheduler
 
 class cycleGAN(BaseModel):
     """
