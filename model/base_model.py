@@ -4,7 +4,7 @@ This is a basic model class for every GAN model,all GAN models should have these
 
 import os
 import torch
-from model.base_networks import get_scheduler
+from utils import get_scheduler
 
 class BaseModel:
 
@@ -60,17 +60,15 @@ class BaseModel:
         if not os.path.exists(filename):
             print('Load model : Start a new train')
             return
-        state = torch.load(Nfilename,map_location=self.device)
+        state = torch.load(filename,map_location=self.device)
         for name in state.keys():
-            if 'net' or 'optimizer' in name:
+            if ('net' or 'optimizer') in name:
                 full_name = getattr(self,name)
                 full_name.load_state_dict(state[name])
             else:
                 full_name = getattr(self,name)
                 full_name = state[name]
         print('Load model : Model loaded done!')
-        if self.params.isTrain:
-            self.schedulers=[get_scheduler(optim,self.epoch,self.params) for optim in self.optimizers]
  
                    
     def save_model(self,epoch):
@@ -80,8 +78,8 @@ class BaseModel:
         dicts['losses'] = self.losses
         dicts['optimizer_G'] = self.optimizer_G
         dicts['optimizer_D'] = self.optimizer_D
-        if not os.path.exists('self.params.save_path'):
-            os.mkdir('self.params.save_path')
+        if not os.path.exists(self.params.save_path):
+            os.mkdir(self.params.save_path)
         save_path = self.params.save_path+'/'+str(epoch)+'_checkpoint.pth.tar'
         for name in self.model_names:
             if isinstance(name,str):

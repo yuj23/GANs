@@ -35,6 +35,8 @@ class cycleGAN(BaseModel):
         self.optimizer_D = torch.optim.Adam(itertools.chain(self.netD_A.parameters(),\
              self.netD_B.parameters()),lr=params.lr, betas=(params.beta1,0.999))
         self.optimizers = [self.optimizer_G,self.optimizer_D]
+        if self.params.isTrain:
+            self.schedulers=[get_scheduler(optim,self.params) for optim in self.optimizers]
         # define loss function
         self.criterion_identity = torch.nn.L1Loss()
         self.criterion_cycle = torch.nn.L1Loss()
