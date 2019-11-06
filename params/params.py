@@ -9,7 +9,7 @@ from PIL import Image
 class Params:
 
     def __init__(self):
-        self.save_path = "save" 
+        self.save_path = "./save" 
         self.isTrain = True
         self.device = torch.device('cuda:0') if torch.cuda.is_available() else torch.device('cpu')
         self.transform =[transforms.Resize(int(256*1.12), Image.BICUBIC), 
@@ -17,7 +17,7 @@ class Params:
                 transforms.RandomHorizontalFlip(),
                 transforms.ToTensor(),
                 transforms.Normalize((0.5,0.5,0.5), (0.5,0.5,0.5)) ]
-        self.dataset_path = 'data'
+        self.dataset_path = './data'
         self.data_name='horse2zebra'
         self.serial = True
 
@@ -39,8 +39,8 @@ class Params:
 
     def print_params(self):
         self.print_freq = 10
-        self.save_lasted_freq = 10
-        self.save_epoch_freq = 1
+        self.save_lasted_freq = 512
+        self.save_epoch_freq = 2
 
     def model_params(self):
         self.pool_size = 2
