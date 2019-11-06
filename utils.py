@@ -1,5 +1,28 @@
 import torch
 import random
+import os 
+import matplotlib.pyplot as plt
+import numpy as np
+
+def get_samples(model,data,epoch,params):
+    """random sampling 2 pictures generated from generator and save it to save_path"""
+    with torch.no_grad():
+        fake_B = model.netG_A2B(data).detach()
+    inds = np.random.choice(range(len(data)),2,replace=False) #2.Float()
+    pics = []
+    for i in inds:
+        pic = torch.unsqueeze(fake_B[i],0)
+        pics.append(pic)
+    pics = torch.cat(pics,-1).squeeze(0)
+    pics = pics.permute(1,2,0)
+    #form tensor to image with range [0-255]
+    sprite = 127.5*(pics.cpu().float().numpy()+1.0)
+    sprite = sprite.astype(np.uint8)
+    if not os.path.exists(params.save_path):
+        os.mkdir(params.save_path)
+    name = params.save_path+'epoch'+str(epoch)+'_samples.jpg'
+    plt.imsave(name,sprite)
+    return sprite
 
 def get_scheduler(optimizer,params):
     def lambda_rule(epoch):
