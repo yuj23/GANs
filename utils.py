@@ -4,9 +4,8 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 
-def make_sprite(data,cols=2):
+def make_sprite(data,inds,cols=2):
     """given a data [N,C,H,W],return sprire picture with [H,W*cols,C]"""
-    inds = np.random.choice(range(len(data)),2,replace=False) #2.Float()
     pics = []
     for i in inds:
         pic = torch.unsqueeze(data[i],0)
@@ -18,13 +17,14 @@ def make_sprite(data,cols=2):
 def get_samples(model,data,epoch,params):
     """random sampling 2 pictures generated from generator and save it to save_path"""
     with torch.no_grad():
-        fake_B = model.netG_A2B(data).detach()
+        fake_B = model.netG_A2B(data['A'].to(params.device))
     #save real image
-    real_A = make_sprite(data)
+    inds = np.random.choice(range(len(data)),2,replace=False) #2.Float()
+    real_A = make_sprite(data['A'],inds)
     real_A = 127.5*(real_A.cpu().float().numpy()+1.0)
     real_A = real_A.astype(np.uint8)
     #form tensor to image with range [0-255]
-    fake_B = make_sprite(fake_B)
+    fake_B = make_sprite(fake_B,inds)
     fake_B = 127.5*(fake_B.cpu().float().numpy()+1.0)
     fake_B = fake_B.astype(np.uint8)
     if not os.path.exists(params.save_path):
@@ -33,8 +33,9 @@ def get_samples(model,data,epoch,params):
     name_real = params.save_path+'/'+'epoch'+str(epoch)+'_real_A_samples.jpg'
     plt.imsave(name_fake,fake_B)
     plt.imsave(name_real,real_A)
+    print('Image saved.')
     return real_A,fake_B
-
+ 
 def get_scheduler(optimizer,params):
     def lambda_rule(epoch):
             lr_l = 1.0 - max(0, epoch - params.epoch_start_decay) / float(params.n_epoch-params.epoch_start_decay+1)
