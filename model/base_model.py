@@ -5,6 +5,7 @@ This is a basic model class for every GAN model,all GAN models should have these
 import os
 import torch
 from utils import get_scheduler
+from utils import init_weight_normal
 
 class BaseModel:
 
@@ -14,6 +15,17 @@ class BaseModel:
         self.loss_names = [] 
         self.device = torch.device('cuda:0') if torch.cuda.is_available() else torch.device('cpu')
         
+    def init_weight_normal(self):
+        if len(self.model_names)>0:
+            for net in self.model_names:
+                name = 'net'+net
+                name = getattr(self,name)
+                init_weight_normal(name)
+            print('Initialized already')
+        else:
+            print("no model to initialize")
+        return
+
     def set_input(self,data):
         """feed the data"""
         pass

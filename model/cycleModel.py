@@ -45,6 +45,10 @@ class cycleGAN(BaseModel):
         #create target real and fake
         self.target_real = torch.ones(self.params.batch_size,requires_grad=True).to(self.params.device)
         self.target_fake = torch.zeros(self.params.batch_size,requires_grad=True).to(self.params.device)
+        #init net 
+        self.init_weight_normal()
+        
+        
 
     def set_input(self,data):
         """

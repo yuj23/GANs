@@ -4,25 +4,36 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 
+def make_sprite(data,cols=2):
+    """given a data [N,C,H,W],return sprire picture with [H,W*cols,C]"""
+    inds = np.random.choice(range(len(data)),2,replace=False) #2.Float()
+    pics = []
+    for i in inds:
+        pic = torch.unsqueeze(data[i],0)
+        pics.append(pic)
+    pics = torch.cat(pics,-1).squeeze(0)
+    pics = pics.permute(1,2,0)
+    return pics
+
 def get_samples(model,data,epoch,params):
     """random sampling 2 pictures generated from generator and save it to save_path"""
     with torch.no_grad():
         fake_B = model.netG_A2B(data).detach()
-    inds = np.random.choice(range(len(data)),2,replace=False) #2.Float()
-    pics = []
-    for i in inds:
-        pic = torch.unsqueeze(fake_B[i],0)
-        pics.append(pic)
-    pics = torch.cat(pics,-1).squeeze(0)
-    pics = pics.permute(1,2,0)
+    #save real image
+    real_A = make_sprite(data)
+    real_A = 127.5*(real_A.cpu().float().numpy()+1.0)
+    real_A = real_A.astype(np.uint8)
     #form tensor to image with range [0-255]
-    sprite = 127.5*(pics.cpu().float().numpy()+1.0)
-    sprite = sprite.astype(np.uint8)
+    fake_B = make_sprite(fake_B)
+    fake_B = 127.5*(fake_B.cpu().float().numpy()+1.0)
+    fake_B = fake_B.astype(np.uint8)
     if not os.path.exists(params.save_path):
         os.mkdir(params.save_path)
-    name = params.save_path+'epoch'+str(epoch)+'_samples.jpg'
-    plt.imsave(name,sprite)
-    return sprite
+    name_fake = params.save_path+'/'+'epoch'+str(epoch)+'_fake_B_samples.jpg'
+    name_real = params.save_path+'/'+'epoch'+str(epoch)+'_real_A_samples.jpg'
+    plt.imsave(name_fake,fake_B)
+    plt.imsave(name_real,real_A)
+    return real_A,fake_B
 
 def get_scheduler(optimizer,params):
     def lambda_rule(epoch):
@@ -63,7 +74,13 @@ class set_buffer_pool:
        return_images = torch.cat(return_images,0)
        return return_images    
 
-
+def init_weight_normal(m):
+    classname = m.__class__.__name__
+    if classname.find('Conv') != -1:
+        torch.nn.init.normal(m.weight.data, 0.0, 0.02)
+    elif classname.find('BatchNorm2d') != -1:
+        torch.nn.init.normal(m.weight.data, 1.0, 0.02)
+        torch.nn.init.constant(m.bias.data, 0.0)
 
 
 
