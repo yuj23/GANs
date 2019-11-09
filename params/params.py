@@ -29,18 +29,18 @@ class Params:
     def hy_params(self):
         self.n_epoch = 10  #number of epoch
         self.epoch = 1  # start epoch
-        self.epoch_start_decay = 2 # start to decay lerning rate
+        self.epoch_start_decay = 100 # start to decay lerning rate
         self.lr = 0.0002
         self.beta1 = 0.5
-        self.lambda_idt_A = 10
-        self.lambda_idt_B = 10
-        self.lambda_cycle_A = 5
-        self.lambda_cycle_B = 5
+        self.lambda_idt_A = 5
+        self.lambda_idt_B = 5 
+        self.lambda_cycle_A = 10 
+        self.lambda_cycle_B = 10
 
     def print_params(self):
         self.print_freq = 10
         self.save_lasted_freq = 512
-        self.save_epoch_freq = 2
+        self.save_epoch_freq = 5
 
     def model_params(self):
         self.pool_size = 2

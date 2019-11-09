@@ -23,7 +23,7 @@ class ResidualBlock(nn.Module):
         return x + self.conv_block(x)
 
 class G(nn.Module):
-    def __init__(self, input_nc, output_nc, n_blocks=9):
+    def __init__(self, input_nc, output_nc, n_blocks=6):
         super(G, self).__init__()
 
         # Initial convolution block       

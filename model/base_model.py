@@ -104,3 +104,11 @@ class BaseModel:
                     dicts[name] = net.state_dict()
         torch.save(dicts,save_path)
 
+    def requires_grad(nets,requires_grad=False):
+        if not  isinstance(nets,list):
+            nets = [nets]
+        for net in nets:
+            if net:
+                for param in net.parameters():
+                    params.requires_grad = requires_grad
+    
