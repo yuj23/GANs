@@ -48,7 +48,6 @@ class cycleGAN(BaseModel):
         #init net 
         self.init_weight_normal()
         
-        
 
     def set_input(self,data):
         """
@@ -69,15 +68,15 @@ class cycleGAN(BaseModel):
 
     def backward_G(self):
         """
-        Claculate Generator loss and do backward to get gradient.
+        claculate Generator loss and backward to get gradient.
         """
         # identity loss
         self.loss_idt_A = self.criterion_identity(self.netG_B2A(self.real_A),self.real_A)
         self.loss_idt_B = self.criterion_identity(self.netG_A2B(self.real_B),self.real_B)
         self.loss_idt = self.loss_idt_A * self.params.lambda_idt_A + self.loss_idt_B * self.params.lambda_idt_B
         # cycle loss
-        self.loss_cycle_A = self.criterion_cycle(self.recover_B,self.real_B)
-        self.loss_cycle_B = self.criterion_cycle(self.recover_A,self.real_A)
+        self.loss_cycle_A = self.criterion_cycle(self.netG_A2B(self.fake_A),self.real_B)
+        self.loss_cycle_B = self.criterion_cycle(self.netG_B2A(self.fake_B),self.real_A)
         self.loss_cycle = self.loss_cycle_A * self.params.lambda_cycle_A + self.loss_cycle_B * self.params.lambda_cycle_B
         # gan loss
         self.loss_gan_A_fake = self.criterion_GAN(self.netD_A(self.fake_A),self.target_real)
@@ -106,17 +105,18 @@ class cycleGAN(BaseModel):
 
     def step(self):
         """
-        update the network parameters.
+        update the network paramters.
         """
         self.forward()
         #update Generator
-        self.requires_grad([self.netD_A,self.netD_A],requires_grad=False)
+        self.requires_grad([self.netD_A,self.netD_B],False)
         self.optimizer_G.zero_grad()
         self.backward_G()
         self.optimizer_G.step()
         #update Discriminator
-        self.requires_grad([self.netD_A,self.netD_B],requires_grad=True)
+        self.requires_grad([self.netD_A,self.netD_B],True)
         self.optimizer_D.zero_grad()
         self.backward_D()
         self.optimizer_D.step()
     
+

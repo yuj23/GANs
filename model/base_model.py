@@ -73,6 +73,7 @@ class BaseModel:
             print('Load model : Start a new train')
             return
         state = torch.load(filename,map_location=self.device)
+        print(state.keys())
         for name in state.keys():
             if ('net' or 'optimizer') in name:
                 full_name = getattr(self,name)
@@ -83,16 +84,19 @@ class BaseModel:
         print('Load model : Model loaded done!')
  
                    
-    def save_model(self,epoch):
+    def save_model(self,epoch,pre=None):
         """save epoch,model, optimizers and losses to resume training later"""
         dicts = {}
-        dicts['epoch']=self.epoch
+        dicts['epoch'] = epoch
         dicts['losses'] = self.losses
         dicts['optimizer_G'] = self.optimizer_G
         dicts['optimizer_D'] = self.optimizer_D
         if not os.path.exists(self.params.save_path):
             os.mkdir(self.params.save_path)
-        save_path = self.params.save_path+'/'+str(epoch)+'_checkpoint.pth.tar'
+        if pre:
+            save_path = self.params.save_path+'/'+str(pre)+'_checkpoint.pth.tar'
+        else:
+            save_path = self.params.save_path+'/'+str(epoch)+'_checkpoint.pth.tar'
         for name in self.model_names:
             if isinstance(name,str):
                 name = 'net'+name
@@ -103,12 +107,22 @@ class BaseModel:
                 else:
                     dicts[name] = net.state_dict()
         torch.save(dicts,save_path)
-
-    def requires_grad(nets,requires_grad=False):
+        
+    def requires_grad(self,nets,requires_grad=False):
         if not  isinstance(nets,list):
             nets = [nets]
         for net in nets:
             if net:
                 for param in net.parameters():
-                    params.requires_grad = requires_grad
+                    param.requires_grad = requires_grad
     
+    def print_loss(self,losses):
+        if losses is None:
+            print("No losses.")
+            return
+        m = ''
+        for name,value in losses.items():
+            m += ' | '+str(name)+" : "+str(round(value[-1],8))
+        print("latest loss information,{}".format(m))
+
+
