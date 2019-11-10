@@ -68,19 +68,20 @@ class BaseModel:
 
     def load(self,name='latest'):
         """load latest or epoch checkpoint"""
-        filename = self.params.save_path+'/'+name+'_checkpoint.pth.tar'
+        filename = self.params.save_path+'/'+str(name)+'_checkpoint.pth.tar'
         if not os.path.exists(filename):
             print('Load model : Start a new train')
             return
         state = torch.load(filename,map_location=self.device)
-        print(state.keys())
         for name in state.keys():
             if ('net' or 'optimizer') in name:
                 full_name = getattr(self,name)
                 full_name.load_state_dict(state[name])
+                print('State dict {} are loaded.'.format(name))
             else:
-                full_name = getattr(self,name)
-                full_name = state[name]
+                setattr(self,name,state[name])
+                if 'epoch' in name:
+                    print('Continue to train at epoch : {}'.format(self.epoch))
         print('Load model : Model loaded done!')
  
                    

@@ -16,7 +16,7 @@ class cycleGAN(BaseModel):
     """
     def __init__(self,params):
         BaseModel.__init__(self,params)
-        self.loss_names = ['loss_identity','loss_cycle','loss_gan','loss_G','loss_D']
+        self.loss_names = ['loss_identity','loss_cycle','loss_gan','loss_G','loss_D','loss_D_A','loss_D_B']
         self.losses = self.make_loss_dict()
         if self.params.isTrain:
             self.model_names = ['G_A2B','G_B2A','D_A','D_B']
@@ -83,11 +83,16 @@ class cycleGAN(BaseModel):
         self.loss_gan_B_fake = self.criterion_GAN(self.netD_B(self.fake_B),self.target_real)
         self.loss_gan = self.loss_gan_A_fake + self.loss_gan_B_fake
         self.loss_G = self.loss_idt + self.loss_cycle + self.loss_gan_A_fake + self.loss_gan_B_fake
+        self.loss_G.backward()
+
+    def save_loss(self):
         self.losses['loss_identity'].append(self.loss_idt.item())
         self.losses['loss_cycle'].append(self.loss_cycle.item())
         self.losses['loss_gan'].append(self.loss_gan.item())
         self.losses['loss_G'].append(self.loss_G.item())
-        self.loss_G.backward()
+        self.losses['loss_D_A'].append(self.loss_D_A.item())
+        self.losses['loss_D_B'].append(self.loss_D_B.item())
+        self.losses['loss_D'].append(self.loss_D.item())
 
     def backward_D(self):
         """
@@ -100,8 +105,10 @@ class cycleGAN(BaseModel):
         fake_B = self.fake_pool_B.choose(self.fake_A)
         self.loss_D_B_fake = self.criterion_GAN(self.netD_B(fake_B.detach()),self.target_fake)*0.5
         self.loss_D = self.loss_D_A_real + self.loss_D_A_fake + self.loss_D_B_real + self.loss_D_B_fake
-        self.losses['loss_D'].append(self.loss_D.item())
-        self.loss_D.backward()
+        self.loss_D_A = self.loss_D_A_fake + self.loss_D_A_real
+        self.loss_D_B = self.loss_D_B_fake + self.loss_D_B_real
+        self.loss_D_A.backward()
+        self.loss_D_B.backward()
 
     def step(self):
         """

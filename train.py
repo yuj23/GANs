@@ -31,8 +31,10 @@ if __name__ == "__main__":
             model.step() #train the model
             print('\rTotal iters : {}'.format(total_iters),end="")
             if total_iters % params.print_freq == 0:
+                model.save_loss()
                 print('\nepoch : ',epoch,end = " ")
                 model.print_loss(model.losses)
+
             if total_iters % params.save_lasted_freq == 0:
                 print('\nSaving the latest model')
                 model.save_model(epoch,'latest')
