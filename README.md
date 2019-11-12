@@ -7,7 +7,7 @@ An implementation of DCGAN.
 
 DCGAN is a basic GAN structure with noise(a vecter) as an input and it outputs the image that can be seen as the same as real image. I use the `MNIST` dataset to implement this paper.
 
-###Get started
+### Get started
 firstly,run
 
 ```
@@ -19,6 +19,7 @@ While training,you can see the samples of result at `./save/dcGan/`.
 There are some results shown as followed
 
 ![samples](./imgs/dcgan/epoch_samples.png)
+
 When epoch comes to 5, it can generate the images looked like real digit images,when it comes to 30,the images generated do not get improved comparing with the images at epoch 5.Probably, this is because the structure of the `generator` and the `discriminator` is too simple to generator more realistic image.
 
 ## Cycle GAN
