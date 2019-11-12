@@ -1,8 +1,10 @@
 import os
 from torch.utils.data import Dataset
 from torchvision import transforms
+from torchvision import datasets
 from PIL import Image
 import random
+
 
 class CustomDataset(Dataset):
     def __init__(self,params):
@@ -10,7 +12,7 @@ class CustomDataset(Dataset):
         self.serial = params.serial
         self.isTrain = params.isTrain
         self.path_root = params.dataset_path
-        self.data_name = params.data_name
+        self.data_name = params.dataset_name
         if self.isTrain == True:
             path_A = os.path.join(self.path_root,self.data_name,'trainA')
             path_B = os.path.join(self.path_root,self.data_name,'trainB')

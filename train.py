@@ -12,7 +12,7 @@ import warnings
 warnings.filterwarnings("ignore")
 
 if __name__ == "__main__":
-    params = Params()
+    params = Params('cycleGan')
     dataset = load_data(params) #load data
     data_size = len(dataset)
     print('Creat Model: cycleGAN')

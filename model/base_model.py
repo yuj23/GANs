@@ -8,7 +8,6 @@ from utils import get_scheduler
 from utils import init_weight_normal
 
 class BaseModel:
-
     def __init__(self,params):
         self.params = params
         self.epoch = self.params.epoch
@@ -74,7 +73,7 @@ class BaseModel:
             return
         state = torch.load(filename,map_location=self.device)
         for name in state.keys():
-            if ('net' or 'optimizer') in name:
+            if 'net' in name or 'optimizer' in name:
                 full_name = getattr(self,name)
                 full_name.load_state_dict(state[name])
                 print('State dict {} are loaded.'.format(name))
@@ -90,10 +89,10 @@ class BaseModel:
         dicts = {}
         dicts['epoch'] = epoch
         dicts['losses'] = self.losses
-        dicts['optimizer_G'] = self.optimizer_G
-        dicts['optimizer_D'] = self.optimizer_D
+        dicts['optimizer_G'] = self.optimizer_G.state_dict()
+        dicts['optimizer_D'] = self.optimizer_D.state_dict()
         if not os.path.exists(self.params.save_path):
-            os.mkdir(self.params.save_path)
+            os.makedirs(self.params.save_path)
         if pre:
             save_path = self.params.save_path+'/'+str(pre)+'_checkpoint.pth.tar'
         else:

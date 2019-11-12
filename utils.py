@@ -4,6 +4,19 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 
+def get_sample_image(g,epoch,params):
+    """save 100 sample images"""
+    z = torch.randn(100,params.n_noise).to(params.device)
+    y_hat = g(z).view(100,28,28)
+    result = y_hat.cpu().data.numpy()
+    img = np.zeros([280,280])
+    for j in range(10):
+        img[j*28:(j+1)*28] = np.concatenate([x for x in result[j*10:(j+1)*10]],axis=-1)
+    img = 127.5*(img+1.0)
+    img = img.astype(np.uint8)
+    plt.imsave(params.save_path+'/epoch{}_sample.jpg'.format(epoch),img,cmap='gray')
+    return img
+
 def make_sprite(data,inds,cols=2):
     """given a data [N,C,H,W],return sprire picture with [H,W*cols,C]"""
     pics = []
