@@ -8,19 +8,19 @@ An implementation of DCGAN.
 DCGAN is a basic GAN structure with noise(a vecter) as an input and it outputs the image that can be seen as the same as real image. I use the `MNIST` dataset to implement this paper.
 
 ### Get started
-firstly,run
+Firstly, you need to run
 
 ```
 python3 trainDcGan.py
 ```
-It will download the mnist dataset and save it at `./data/mnist/`or you can change the parameter `save_path` which are located at `./params/params.py` to set your own save path.
+The MNIST dataset will be download and be saved at `./data/mnist/`,or you can change the parameter `save_path` which are located at `./params/params.py` to set your own save path.
 
-While training,you can see the samples of result at `./save/dcGan/`.
+While training, you can see the samples of the result at `./save/dcGan/`.
 There are some results shown as followed
 
 ![samples](./imgs/dcgan/epoch_samples.png)
 
-When epoch comes to 5, it can generate the images looked like real digit images,when it comes to 30,the images generated do not get improved comparing with the images at epoch 5.Probably, this is because the structure of the `generator` and the `discriminator` is too simple to generator more realistic image.
+When epoch comes to 5, it can generate the images looked like real digit images. When it comes to 30, the quality of the images generated do not gets improved comparing with the images at epoch 5. Probably, this is because the structure of the `generator` and the `discriminator` is too simple to generate a more realistic image. 
 
 ## Cycle GAN
 [paper link](https://arxiv.org/pdf/1703.10593.pdf)
