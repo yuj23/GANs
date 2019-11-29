@@ -11,7 +11,7 @@ if __name__ == "__main__":
     dataset = load_data(params)
     datasize = len(dataset)
     print('Creat Model : DC-GAN')
-    model = dcGan(params)
+    model = DCGAN(params)
     model.load()
     total_iters = 0
     print("Start to train the model")

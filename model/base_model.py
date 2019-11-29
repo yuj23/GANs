@@ -29,11 +29,6 @@ class BaseModel:
         """feed the data"""
         pass
 
-    def forward(self):
-        """
-        put data and forward to get some results
-        """
-        pass
     
     def backward_G(self):
         """
@@ -47,11 +42,6 @@ class BaseModel:
         """
         pass
 
-    def step(self):
-        """
-        update the parameters and network.
-        """
-        pass
 
     def make_loss_dict(self):
         """get loss"""
@@ -60,10 +50,10 @@ class BaseModel:
             losses[name] = [] 
         return losses
 
-    def update_learning_rate(self):
+    def update_learning_rate(self,epoch):
         """update learning rate"""
         for scheduler in self.schedulers:
-            scheduler.step()
+            scheduler.step(epoch)
 
     def load(self,name='latest'):
         """load latest or epoch checkpoint"""
@@ -115,6 +105,9 @@ class BaseModel:
             if net:
                 for param in net.parameters():
                     param.requires_grad = requires_grad
+
+    def print_lr(self):
+        print('Learning rate of {} is {}'.format('optmizer_D',self.optimizer_G.state_dict()['param_groups'][0]['lr']))
     
     def print_loss(self,losses):
         if losses is None:

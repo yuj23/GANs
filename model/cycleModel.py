@@ -102,7 +102,7 @@ class cycleGAN(BaseModel):
         fake_A = self.fake_pool_A.choose(self.fake_A)
         self.loss_D_A_fake = self.criterion_GAN(self.netD_A(fake_A.detach()),self.target_fake)*0.5
         self.loss_D_B_real = self.criterion_GAN(self.netD_B(self.real_B),self.target_real)*0.5 
-        fake_B = self.fake_pool_B.choose(self.fake_A)
+        fake_B = self.fake_pool_B.choose(self.fake_B)
         self.loss_D_B_fake = self.criterion_GAN(self.netD_B(fake_B.detach()),self.target_fake)*0.5
         self.loss_D = self.loss_D_A_real + self.loss_D_A_fake + self.loss_D_B_real + self.loss_D_B_fake
         self.loss_D_A = self.loss_D_A_fake + self.loss_D_A_real

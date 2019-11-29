@@ -40,7 +40,7 @@ class Params:
         self.output_nc = 1
         
     def cycleGanParams(self):
-        self.save_path = "./save" 
+        self.save_path = "./save/cyclegan" 
         self.isTrain = True
         self.transform =[transforms.Resize(int(256*1.12), Image.BICUBIC), 
                 transforms.RandomCrop(256), 

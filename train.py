@@ -31,10 +31,10 @@ if __name__ == "__main__":
             model.step() #train the model
             print('\rTotal iters : {}'.format(total_iters),end="")
             if total_iters % params.print_freq == 0:
+                model.print_lr() #print current learning rate
                 model.save_loss()
                 print('\nepoch : ',epoch,end = " ")
                 model.print_loss(model.losses)
-
             if total_iters % params.save_lasted_freq == 0:
                 print('\nSaving the latest model')
                 model.save_model(epoch,'latest')
@@ -48,7 +48,7 @@ if __name__ == "__main__":
         end = time.time()
         print('\n{}/{} is Done! Time Taken: {:.4f}s'.format(epoch,params.n_epoch,end-start))
         model.print_loss(model.losses)
-        model.update_learning_rate() #update learning rate
+        model.update_learning_rate(epoch) #update learning rate
 
 
 
